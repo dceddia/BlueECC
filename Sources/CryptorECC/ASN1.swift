@@ -33,6 +33,12 @@ struct ASN1 {
             // format error
             return (.unknown, data.count)
         }
+        
+        // Make sure the data is long enough
+        let (length, lengthOfLength) = readLength(data: data.advanced(by: 1))
+        guard data.count >= length + lengthOfLength + 1 else {
+            return (.unknown, data.count)
+        }
 
         switch data[0] {
         case 0x30: // sequence
